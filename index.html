@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FileMeta | Serverless File Metadata Extractor</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        /* Header */
+
+        header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            text-align: center;
+            padding: 45px 20px;
+        }
+
+        header h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        /* Main container */
+
+        .container {
+            width: 90%;
+            max-width: 1050px;
+            margin: 40px auto;
+        }
+
+        /* About section */
+
+        .about {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .about h2 {
+            color: #4f46e5;
+            margin-bottom: 12px;
+        }
+
+        .about p {
+            line-height: 1.7;
+            color: #475569;
+        }
+
+        /* Status */
+
+        .status {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 9px 18px;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* File cards */
+
+        .file-card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .file-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .file-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .file-icon {
+            font-size: 32px;
+        }
+
+        .file-title h2 {
+            color: #3730a3;
+            font-size: 22px;
+            word-break: break-word;
+        }
+
+        /* Metadata grid */
+
+        .metadata {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .metadata-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .metadata-label {
+            display: block;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metadata-value {
+            color: #1e293b;
+            font-size: 15px;
+            word-break: break-word;
+        }
+
+        /* Category badge */
+
+        .category {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #ede9fe;
+            color: #5b21b6;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        /* View button */
+
+        .view-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 13px 24px;
+            background: #4f46e5;
+            color: white;
+            text-decoration: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .view-button:hover {
+            background: #3730a3;
+            transform: translateY(-2px);
+        }
+
+        /* Architecture */
+
+        .architecture {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-top: 35px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .architecture h2 {
+            color: #4f46e5;
+            margin-bottom: 25px;
+        }
+
+        .flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .flow-box {
+            background: #eef2ff;
+            border: 2px solid #c7d2fe;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #3730a3;
+        }
+
+        .arrow {
+            font-size: 22px;
+            color: #64748b;
+        }
+
+        /* Footer */
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            background: #1e293b;
+            color: white;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        .services {
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 650px) {
+
+            header h1 {
+                font-size: 30px;
+            }
+
+            .metadata {
+                grid-template-columns: 1fr;
+            }
+
+            .flow {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .file-title h2 {
+                font-size: 18px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <h1>📁 FileMeta</h1>
+
+        <p>
+            Serverless File Metadata Extractor
+        </p>
+
+    </header>
+
+
+
+    <main class="container">
+
+
+        <!-- ABOUT PROJECT -->
+
+        <section class="about">
+
+            <h2>About the Project</h2>
+
+            <p>
+                FileMeta is a serverless file metadata extraction system
+                built using Amazon Web Services. When a file is uploaded
+                to Amazon S3, AWS Lambda automatically processes the file
+                and extracts important metadata such as file name,
+                file type, extension, size and category. The extracted
+                information is stored in Amazon DynamoDB.
+            </p>
+
+            <div class="status">
+                ✓ Serverless Processing Active
+            </div>
+
+        </section>
+
+
+
+        <!-- DOCX FILE -->
+
+        <section class="file-card">
+
+            <div class="file-title">
+
+                <span class="file-icon">
+                    📄
+                </span>
+
+                <h2>
+                    subavarsha_232_MUSIC.docx
+                </h2>
+
+            </div>
+
+
+            <div class="metadata">
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        FILE NAME
+                    </span>
+
+                    <span class="metadata-value">
+                        subavarsha_232_MUSIC.docx
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        FILE TYPE
+                    </span>
+
+                    <span class="metadata-value">
+                        Microsoft Word Document
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        EXTENSION
+                    </span>
+
+                    <span class="metadata-value">
+                        .docx
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        FILE SIZE
+                    </span>
+
+                    <span class="metadata-value">
+                        30,352 bytes
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        CATEGORY
+                    </span>
+
+                    <span class="category">
+                        Assignment
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        STORAGE
+                    </span>
+
+                    <span class="metadata-value">
+                        Amazon S3
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- DIRECT S3 FILE LINK -->
+
+            <a
+                class="view-button"
+                href="https://filemetadata-subavarsha-232.s3.us-east-1.amazonaws.com/upload/subavarsha_232_MUSIC.docx"
+                target="_blank">
+
+                📂 View File
+
+            </a>
+
+        </section>
+
+
+
+        <!-- PDF FILE -->
+
+        <section class="file-card">
+
+            <div class="file-title">
+
+                <span class="file-icon">
+                    📕
+                </span>
+
+                <h2>
+                    Nandhi hills_Sponge effect.pdf
+                </h2>
+
+            </div>
+
+
+            <div class="metadata">
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        FILE NAME
+                    </span>
+
+                    <span class="metadata-value">
+                        Nandhi hills_Sponge effect.pdf
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        FILE TYPE
+                    </span>
+
+                    <span class="metadata-value">
+                        PDF Document
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        EXTENSION
+                    </span>
+
+                    <span class="metadata-value">
+                        .pdf
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        FILE SIZE
+                    </span>
+
+                    <span class="metadata-value">
+                        1,449,075 bytes
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        CATEGORY
+                    </span>
+
+                    <span class="category">
+                        Study Material
+                    </span>
+
+                </div>
+
+
+                <div class="metadata-item">
+
+                    <span class="metadata-label">
+                        STORAGE
+                    </span>
+
+                    <span class="metadata-value">
+                        Amazon S3
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- DIRECT S3 FILE LINK -->
+
+           <a
+    class="view-button"
+    href="https://filemetadata-subavarsha-232.s3.us-east-1.amazonaws.com/upload/nandhi_hills_sponge_effect.pdf"
+    target="_blank">
+
+    📂 View File
+
+</a>
+
+        </section>
+
+
+
+        <!-- ARCHITECTURE -->
+
+        <section class="architecture">
+
+            <h2>⚙️ Serverless Architecture</h2>
+
+            <div class="flow">
+
+                <div class="flow-box">
+                    📤 File Upload
+                </div>
+
+                <div class="arrow">
+                    →
+                </div>
+
+                <div class="flow-box">
+                    ☁️ Amazon S3
+                </div>
+
+                <div class="arrow">
+                    →
+                </div>
+
+                <div class="flow-box">
+                    ⚡ AWS Lambda
+                </div>
+
+                <div class="arrow">
+                    →
+                </div>
+
+                <div class="flow-box">
+                    🗄️ DynamoDB
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            <strong>FileMeta</strong> | AWS Serverless Project
+        </p>
+
+        <p class="services">
+            Amazon S3 • AWS Lambda • Amazon DynamoDB
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>
